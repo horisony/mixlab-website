@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Mixlab</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+
+		<style>
+			body {
+				/*background-image: linear-gradient(#2A358A,#4870C6,#38BACA);*/
+				/*background: linear-gradient(red, yellow);*/
+				/*background: red;*/
+				margin: 0px;
+				overflow: hidden;
+				color: #999;
+				background: #11e8bb; /* Old browsers */
+				background: -moz-linear-gradient(top,  #11e8bb 0%, #8200c9 100%); /* FF3.6-15 */
+				background: -webkit-linear-gradient(top,  #11e8bb 0%,#8200c9 100%); /* Chrome10-25,Safari5.1-6 */
+				background: linear-gradient( red, blue ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+			}
+
+			a {
+				color:#0078ff;
+			}
+
+			.main-title-container {
+				position: fixed; 
+				top: 0px;
+				bottom: 0px; 
+				left: 0px;
+				right: 0px;
+				display: flex; 
+				justify-content: center;
+				align-items: center;
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-transparent">
+			<div class="container-fluid" style="padding-left: 20px; padding-right: 20px; padding-top: 12px;">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="index.html"> Mixlab </a>
+				</div>
+				<ul class="nav navbar-nav navbar-right" style="margin-right: 30px;">
+					<li><a href="#nav-service">简介</a></li>
+					<li><a href="#nav-about">小程序</a></li>
+				</ul>
+			</div>
+		</nav>
+		<div class="main-title-container">
+			<div style="position: absolute; margin: 150px, auto; ">
+				<div style="font-size: 60px; text-align: center;"> 一个科技与艺术结合的社区 </div>
+				<div style="font-size: 30px; text-align: center; padding-top: 30px;"> 助你实现无限可能 </div>
+			</div>
+	 	</div>
+		<script src="js/three.js"></script>
+		<script src="js/renderers/Projector.js"></script>
+		<script src="js/renderers/CanvasRenderer.js"></script>
+		<script src="js/libs/stats.min.js"></script>
+
+		<script>
+
+			var SEPARATION = 90, AMOUNTX = 70, AMOUNTY = 50;
+
+			var container, stats;
+			var camera, scene, renderer;
+
+			var particles, particle, count = 0;
+
+			var mouseX = 0, mouseY = 0;
+
+			var windowHalfX = window.innerWidth / 2;
+			var windowHalfY = window.innerHeight / 2;
+
+			init();
+			animate();
+		
+
+			function init() {
+
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 1, 10000 );
+				camera.position.z = 1000;
+
+				scene = new THREE.Scene();
+				// scene.background = new THREE.Color( 0x031123 );
+				Background.renderer.setClearColor(0xffffff, 0);
+
+				particles = new Array();
+
+				var PI2 = Math.PI * 2;
+				// var gradient = context.createLinearGradient( 0, 0, size, size );
+				// gradient.addColorStop(0, '#99ddff'); 
+				// gradient.addColorStop(1, '#00ff00');
+				// context.fillStyle = gradient;
+				var material = new THREE.MeshNormalMaterial( {
+
+					color: 0x00E4FF,
+
+					program: function ( context ) {
+
+						context.beginPath();
+						context.arc( 0, 0, 0.38, 0, PI2, true );
+						context.fill();
+
+					}
+
+				} );
+
+				//gradient light
+				var ambientLight = new THREE.AmbientLight(0x999999);
+				scene.add(ambientLight);
+
+				// var lights = [];
+				// lights[0] = new THREE.DirectionalLight( 0xff0000, 1 );
+				// lights[0].position.set( 1, 0, 0 );
+				// lights[1] = new THREE.DirectionalLight( 0x11E8BB, 1 );
+				// lights[1].position.set( 0.75, 1, 0.5 );
+				// lights[2] = new THREE.DirectionalLight( 0x8200C9, 1 );
+				// lights[2].position.set( -0.75, -1, 0.5 );
+				// scene.add( lights[0] );
+				// scene.add( lights[1] );
+				// scene.add( lights[2] );
+				
+
+				var i = 0;
+
+				for ( var ix = 0; ix < AMOUNTX; ix ++ ) {
+
+					for ( var iy = 0; iy < AMOUNTY; iy ++ ) {
+
+						particle = particles[ i ++ ] = new THREE.Mesh( material );
+						particle.position.x = ix * SEPARATION - ( ( AMOUNTX * SEPARATION ) / 2 );
+						particle.position.z = iy * SEPARATION - ( ( AMOUNTY * SEPARATION ) / 2 );
+						scene.add( particle );
+
+					}
+
+				}
+
+				// var renderer = new THREE.WebGLRenderer({ alpha: true });
+				// renderer.setClearColor( 0xffff00, 1 );
+
+				renderer = new THREE.CanvasRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				container.appendChild( renderer.domElement );
+
+				// stats = new Stats();
+				// container.appendChild( stats.dom );
+
+				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+				document.addEventListener( 'touchstart', onDocumentTouchStart, false );
+				document.addEventListener( 'touchmove', onDocumentTouchMove, false );
+
+				//
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function onWindowResize() {
+
+				windowHalfX = window.innerWidth / 2;
+				windowHalfY = window.innerHeight / 2;
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			//
+
+			function onDocumentMouseMove( event ) {
+
+				mouseX = event.clientX - windowHalfX;
+				mouseY = event.clientY - windowHalfY;
+
+			}
+
+			function onDocumentTouchStart( event ) {
+
+				if ( event.touches.length === 1 ) {
+
+					event.preventDefault();
+
+					mouseX = event.touches[ 0 ].pageX - windowHalfX;
+					mouseY = event.touches[ 0 ].pageY - windowHalfY;
+
+				}
+
+			}
+
+			function onDocumentTouchMove( event ) {
+
+				if ( event.touches.length === 1 ) {
+
+					event.preventDefault();
+
+					mouseX = event.touches[ 0 ].pageX - windowHalfX;
+					mouseY = event.touches[ 0 ].pageY - windowHalfY;
+
+				}
+
+			}
+
+			//
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				render();
+				stats.update();
+
+			}
+
+			function render() {
+
+				// camera.position.x += ( mouseX - camera.position.x ) * .05;
+				// camera.position.y += ( - mouseY - camera.position.y ) * .05;
+
+				camera.position.x = 320;
+				camera.position.y = 320;
+				camera.lookAt(scene.position);
+
+				var i = 0;
+
+				for ( var ix = 0; ix < AMOUNTX; ix ++ ) {
+
+					for ( var iy = 0; iy < AMOUNTY; iy ++ ) {
+
+						particle = particles[ i++ ];
+						particle.position.y = ( Math.sin( ( ix + count ) * 0.3 ) * 50 ) +
+							( Math.sin( ( iy + count ) * 0.5 ) * 50 );
+						particle.scale.x = particle.scale.y = ( Math.sin( ( ix + count ) * 0.3 ) + 1 ) * 4 +
+							( Math.sin( ( iy + count ) * 0.5 ) + 1 ) * 4;
+
+					}
+
+				}
+
+				renderer.render( scene, camera );
+
+				count += 0.1;
+
+			}
+		</script>
+
+		
+	</body>
+</html>
