@@ -12,9 +12,9 @@
 		<style>
 			body {
 				background: #002466;
-				background: -moz-linear-gradient(top,  #0032A5 0%, #007BAD 45%, #000E54 100%); 
-				background: -webkit-linear-gradient(top, #0032A5  0%, #007BAD 45%, #000E54 100%); 
-				background: linear-gradient(top,  #0032A5 0%, #007BAD 45%, #000E54 100%);
+				background: -moz-linear-gradient(top,  #00237A 0%, #00A8CD 50%, #070744 100%); 
+				background: -webkit-linear-gradient(top, #00237A 0%, #00A8CD 50%, #070744 100%); 
+				background: linear-gradient(top,  #0032A5 0%, #007BAD 50%, #070744 100%);
 				margin: 0px;
 				overflow: hidden;
 				color: white;
@@ -34,26 +34,48 @@
 				justify-content: center;
 				align-items: center;
 			}
+			.btn-style{
+				font-size: 18px; 
+				text-align: center; 
+				margin: auto; 
+				padding: 10px; 
+				width: 140px; 
+				display: inline-block;
+				/*border: 1px solid white; */
+				border-radius: 4px; 
+				background: rgba(255,255,255,0.8); 
+				/*text-shadow: 0px 2px 45px rgba(0,0,0,0.4);*/
+				color: #002466;
+			}
+			.btn-style:hover{
+				background: rgba(255,255,255,1); 
+				color: #002466;
+			}
+			.logo-brand{
+				background-image: url(img/logo-dark.png);
+			}
+
 		</style>
 	</head>
 	<body>
 		<nav class="navbar navbar-default navbar-transparent">
 			<div class="container-fluid" style="padding-left: 20px; padding-right: 20px; padding-top: 12px;">
 				<div class="navbar-header">
-					<a class="navbar-brand" href="index.html"> Mixlab </a>
+					<a class="navbar-brand" href="index.html"><div class="logo-brand"></div> Mixlab </a>
 				</div>
 				<ul class="nav navbar-nav navbar-right" style="margin-right: 30px;">
-					<li><a href="#nav-service">首页</a></li>
-					<li><a href="#nav-about">加入我们</a></li>
-					<li><a href="#nav-about">小程序</a></li>
+					<li><a href="#">首页</a></li>
+					<li><a href="join.html">加入我们</a></li>
+					<!-- <li><a href="#nav-about">小程序</a></li> -->
 				</ul>
 			</div>
 		</nav>
 		<div class="main-title-container">
-			<div>
+			<div style="text-align: center;">
 				<div style="font-size: 64px; font-weight: 400; text-align: center; text-shadow: 0px 2px 45px rgba(0,0,0,0.4);"> 跨界创新社区 </div>
-				<div style="font-size: 32px; text-align: center; padding-top: 16px; letter-spacing: 7px; text-shadow: 0px 2px 45px rgba(0,0,0,0.4);"> 让每个人实现无限可能 </div>
-				<div style="font-size: 14px; width: 750px; text-align: left; margin-top: 50px; padding: 30px 40px; text-shadow: 0px 2px 45px rgba(0,0,0,0.4); background: rgba(0,0,0,0.4); border-radius: 6px;" >
+				<div style="font-size: 32px; font-weight: 300; text-align: center; margin: 10px 0 30px 0; letter-spacing: 7px; text-shadow: 0px 2px 45px rgba(0,0,0,0.4);"> 让每个人实现无限可能 </div>
+				<a href="join.html"><div class="btn-style"> 加入我们 </div></a>
+				<div style="font-size: 14px; width: 760px; text-align: left; margin-top: 36px; padding: 30px 40px; text-shadow: 0px 2px 45px rgba(0,0,0,0.4); background: rgba(0,0,0,0.4); border-radius: 6px;" >
 					<div style="padding-bottom: 16px; font-weight: bold;">mixlab社区成员</div>
 					<div style="padding-bottom: 16px;">企业员工：GoogleBrain、微软、华为、阿里鲁班、腾讯、旷视、三角兽、物灵科技、众安保险、美团、360等
 					</div>
@@ -226,7 +248,7 @@
 				requestAnimationFrame( animate );
 
 				render();
-				stats.update();
+				// stats.update();
 
 			}
 
@@ -257,7 +279,7 @@
 
 				renderer.render( scene, camera );
 
-				count += 0.1;
+				count += 0.045;
 
 			}
 		</script>
